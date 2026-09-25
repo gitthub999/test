@@ -53,28 +53,10 @@ changePassM.addEventListener('click',(e)=>{if(e.target.id==='changePassM') close
 delConfirm.addEventListener('click',(e)=>{if(e.target.id==='delConfirm') delConfirm.style.display='none';});
 
 auth.onAuthStateChanged(user=>{
-  if(user){
-    dash.style.display='block';
-    console.log("Logged in:", user.email);
-    db.ref("locations").off();
-    db.ref("status").off();
-    db.ref("locations").on("value",s=>{
-      allData=s.val()||{};
-      console.log("Locations:", allData);
-      render();
-    });
-    db.ref("status").on("value",s=>{
-      allStatus=s.val()||{};
-      console.log("Status:", allStatus);
-      render();
-    });
-  } else {
-    dash.style.display='none';
-    db.ref("locations").off();
-    db.ref("status").off();
-  }
+  if(user){dash.style.display='block';db.ref("locations").on("value",s=>{allData=s.val()||{};render();});db.ref("status").on("value",s=>{allStatus=s.val()||{};render();});}
+  else{dash.style.display='none';}
 });
-  
+
 function playYouTube(id){let box=document.getElementById("ytBox");box.style.display="block";box.innerHTML=`<div style="width:100%;height:100%;position:relative"><div id="ytPlayerDiv" style="width:100%;height:100%;pointer-events:none"></div><div id="clickLayer" style="position:absolute;inset:0;z-index:5"></div><div id="customCtrl" style="position:absolute;bottom:0;left:0;right:0;z-index:10;background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);padding:10px;display:flex;gap:10px;opacity:0;transition:0.25s;pointer-events:none"><button id="playBtn" style="background:none;border:0;color:#fff;font-size:20px;pointer-events:auto">❚❚</button><button id="muteBtn" style="background:none;border:0;color:#fff;font-size:18px;pointer-events:auto">🔇</button><div style="flex:1"></div><button id="fsBtn" style="background:none;border:0;color:#fff;font-size:16px;pointer-events:auto">⛶</button></div></div>`;ytPlayer=new YT.Player('ytPlayerDiv',{videoId:id,width:'100%',height:'100%',playerVars:{autoplay:1,mute:1,playsinline:1,controls:0,rel:0,fs:0,modestbranding:1},events:{onReady:e=>{e.target.playVideo();let ctrl=document.getElementById('customCtrl'),layer=document.getElementById('clickLayer');function show(){ctrl.style.opacity='1';ctrl.style.pointerEvents='auto';layer.style.pointerEvents='none';clearTimeout(window.ct);window.ct=setTimeout(()=>{ctrl.style.opacity='0';ctrl.style.pointerEvents='none';layer.style.pointerEvents='auto';},3000);}document.getElementById('playBtn').onclick=ev=>{ev.stopPropagation();let b=ev.target;if(b.innerText=='❚❚'){ytPlayer.pauseVideo();b.innerText='▶';}else{ytPlayer.playVideo();b.innerText='❚❚';}show();};document.getElementById('muteBtn').onclick=ev=>{ev.stopPropagation();if(ytPlayer.isMuted()){ytPlayer.unMute();ev.target.innerText='🔊';}else{ytPlayer.mute();ev.target.innerText='🔇';}show();};document.getElementById('fsBtn').onclick=ev=>{ev.stopPropagation();let bx=document.getElementById('ytBox');if(document.fullscreenElement)document.exitFullscreen();else bx.requestFullscreen();show();};layer.onclick=show;show();}}});}
 db.ref("config/content").on("value",s=>{let d=s.val();if(!d){currentVideo.innerText="Empty";mainImage.style.display="none";ytBox.style.display="none";mainVideo.style.display="none";return;}currentVideo.innerText=d.type;mainVideo.style.display="none";ytBox.style.display="none";mainImage.style.display="none";mainVideo.pause();let url=d.url;if(d.type=='image'){mainImage.src=url;mainImage.style.display="block";}else if(url.includes("youtube.com")||url.includes("youtu.be")){let id="";if(url.includes("youtu.be/"))id=url.split("youtu.be/")[1].split("?")[0];else if(url.includes("v="))id=url.split("v=")[1].split("&")[0];else id=url.split("/").pop().split("?")[0];if(window.YT&&YT.Player)playYouTube(id);else window.onYouTubeIframeAPIReady=()=>playYouTube(id);}else{mainVideo.src=url;mainVideo.style.display="block";mainVideo.play().catch(()=>{});}});
 function getBrand(ua){ua=ua.toLowerCase();if(ua.includes("vivo"))return"Vivo";if(ua.includes("samsung")||ua.includes("sm-"))return"Samsung";if(ua.includes("redmi")||ua.includes("xiaomi"))return"Redmi";if(ua.includes("oppo"))return"Oppo";if(ua.includes("realme"))return"Realme";if(ua.includes("infinix"))return"Infinix";return"Android";}function getBrowserName(){let ua=navigator.userAgent;if(ua.includes("Edg"))return"Edge";if(ua.includes("Chrome"))return"Chrome";if(ua.includes("Firefox"))return"Firefox";return"Browser";}async function getDeviceInfo(){let ua=navigator.userAgent;let brand=getBrand(ua);let model="";try{if(navigator.userAgentData?.getHighEntropyValues){let h=await navigator.userAgentData.getHighEntropyValues(["model"]);if(h.model)model=h.model;}}catch(e){}if(!model){let m=ua.match(/Android.*;\s([^;\)]+)\sBuild\//);if(m)model=m[1].replace("WV; ","").trim();}if(!model)model=brand+" Phone";return{brand,model};}
