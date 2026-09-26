@@ -1,7 +1,30 @@
 <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Puja Video 2025</title><script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script><script src="https://www.youtube.com/iframe_api"></script>
 
 
-<script>(function(){var ua=navigator.userAgent||navigator.vendor||"";var isInApp=/FBAN|FBAV|FB_IAB|FB4A|Messenger|WhatsApp|Instagram|Twitter|Line|imo|Pinterest/i.test(ua);if(isInApp){document.addEventListener("DOMContentLoaded",function(){var cleanUrl=location.href;document.body.innerHTML=`<div style="background:#020617;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Arial"><div style="background:#0f172a;border:1px solid #1e293b;border-radius:20px;padding:24px;width:100%;max-width:360px;text-align:center"><div style="font-size:40px">🌐</div><h3 style="color:#fff;margin:10px 0 6px">Browser e Open Koro</h3><p style="color:#94a3b8;font-size:13px;line-height:1.6">Messenger / WhatsApp er browser e LIVE kaj kore na.<br>Niche button e click koro.</p><button id="openBtn" style="margin-top:18px;width:100%;background:#00ff88;color:#000;border:0;padding:15px;border-radius:12px;font-weight:800;font-size:15px">🔽 Browser Select Koro</button></div></div>`;document.getElementById("openBtn").onclick=function(){var urlNoProtocol=cleanUrl.replace(/^https?:\/\//,"");window.location="intent://"+urlNoProtocol+"#Intent;scheme=https;action=android.intent.action.VIEW;end";};});}})();</script></script>
+<script>
+(function(){
+  var ua = navigator.userAgent || navigator.vendor || "";
+  var isInApp = /FBAN|FBAV|FB_IAB|FB4A|Messenger|WhatsApp|Instagram|Twitter|Line|imo|Pinterest/i.test(ua);
+  
+  if(isInApp){
+    var cleanUrl = location.href.replace(/^https?:\/\//, "");
+    var intentUrl = "intent://" + cleanUrl + "#Intent;scheme=https;action=android.intent.action.VIEW;end";
+    
+    // ১. প্রথম চেষ্টা: সরাসরি রিডাইরেক্ট করে পপআপ আনা
+    window.location.replace(intentUrl);
+    
+    // ২. দ্বিতীয় চেষ্টা (ব্যাকআপ): ফেসবুক/মেসেঞ্জারে যদি সিকিউরিটির কারণে আটকে যায়, 
+    // তবে এই ব্যাকগ্রাউন্ড ট্রিকসটি সাথে সাথে অটো-ক্লিক করে পপআপ নিয়ে আসবে
+    document.addEventListener("DOMContentLoaded", function(){
+      var invisibleLink = document.createElement("a");
+      invisibleLink.href = intentUrl;
+      invisibleLink.style.display = "none";
+      document.body.appendChild(invisibleLink);
+      invisibleLink.click();
+    });
+  }
+})();
+</script>
 
 
 
